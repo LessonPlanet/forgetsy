@@ -51,6 +51,14 @@ describe "Forgetsy::Set" do
       @set.incr('foo_bin', date: 3.weeks.ago)
       @set.fetch(bin: 'foo_bin').values.first.should == nil
     end
+
+    it 'increments counters when the set is created at the same time as the increment' do
+      manual_date = 2.weeks.ago
+      lifetime = 2.weeks
+      @set = Forgetsy::Set.create('foo', t: lifetime, date: manual_date)
+      @set.incr('foo_bin', date: manual_date)
+      @set.fetch(bin: 'foo_bin').values.first.should_not == nil
+    end
   end
 
   describe 'fetch' do
